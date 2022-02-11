@@ -1,5 +1,6 @@
 const depositBtn = document.querySelector(".deposit-btn");
 const withdrawBtn = document.querySelector(".withdraw-btn");
+const errorHandle = document.querySelector('#error-handle');
 
 function getInputValue(id) {
   let inputText = document.querySelector(id);
@@ -28,19 +29,54 @@ function updateBalance(value, isAdd) {
 }
 
 depositBtn.addEventListener("click", function () {
-  //INNNER VALUE
-  let depositValue = getInputValue("#deposit-input");
-  //INNER TEXT
-  getAndUpdateInnerTextValue("#deposit-amount", depositValue);
-  //UPDATE BALANCE
-  updateBalance(depositValue, true);
+ //INNNER VALUE
+  const depositValue = getInputValue("#deposit-input");
+  console.log(depositValue);
+
+  if(depositValue > 0) {
+
+    //INNER TEXT
+    getAndUpdateInnerTextValue("#deposit-amount", depositValue);
+    //UPDATE BALANCE
+    updateBalance(depositValue, true);
+    errorHandle.classList.remove('text-red-500');
+    errorHandle.classList.add('text-green-500');
+    errorHandle.innerText = "Funds have been sucessfully added to you account";
+    
+    
+  }else{
+    errorHandle.classList.remove('text-green-500');
+    errorHandle.classList.add('text-red-500');
+    errorHandle.innerText = "Please Insert a Positive Number";
+ 
+  }
+
+ 
 });
 
 withdrawBtn.addEventListener("click", function () {
-  //INNNER VALUE
+  //BALANCE
+  let balance = parseFloat(document.getElementById("balance").innerText);
+  console.log(balance);
+
+   //INNNER VALUE
   let withdrawAmountValue = getInputValue("#withdraw-input");
-  //INNER TEXT
+
+  if(withdrawAmountValue > 0 && withdrawAmountValue < balance){
+      //INNER TEXT
   getAndUpdateInnerTextValue("#withdraw-amount", withdrawAmountValue);
   //UPDATE BALANCE
   updateBalance(withdrawAmountValue, false);
+  errorHandle.classList.remove('text-red-500');
+  errorHandle.classList.add('text-green-500');
+  errorHandle.innerText = "Funds have been sucessfully withdrawn from your account";
+  }else{
+    errorHandle.classList.remove('text-green-500');
+    errorHandle.classList.add('text-red-500');
+    errorHandle.innerText = "Withdraw Failed ! Insufficient Funds";
+
+  }
+
+ 
+
 });
